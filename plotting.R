@@ -29,20 +29,13 @@ visn <- toVisNetworkData(gr)
 ## copy column "weight" to new column "value" in list "edges"
 visn$edges$value <- visn$edges$weight
 
-visNetwork(nodes=nodes, visn$edges,main="Economic Industry Network") %>%
+
+visNetwork(visn$nodes, visn$edges,main="Economic Industry Network",width = "100%") %>%
   visIgraphLayout(layout = "layout_in_circle") %>%
   visEdges(arrows = 'to')  %>%
-  visOptions(nodesIdSelection=TRUE)
-
-nodes<-visn$nodes %>% mutate(shape="dot", # "shape" variable: customize shape of nodes ("dot", "square", "triangle")
-                            shadow=TRUE, # "shadow" variable: include/exclude shadow of node
-                            label=visn$name, # "label" variable: add labels on nodes
-                            size=20, # "size" variable: set size of nodes
-                            borderWidth=1, # "borderWidth" variable: set border width of nodes
-                            color.border="grey", # "color.border" variable: set frame color
-                            color.highlight.background="yellow", # "color.highlight.background" variable: set color of the selected node
-                            color.highlight.border="black") # "color.highlight.border" variable: set frame color of the selected node
-visNetwork(nodes=visn$nodes, edges=visn$edges,main="Economic Industry Network") %>% # "main" variable: add a title
-  visIgraphLayout()%>%
   visOptions(nodesIdSelection=TRUE) %>%
-  visPhysics(stabilization = TRUE)
+  visNodes(size = 20,shape="dot", # "shape" variable: customize shape of nodes ("dot", "square", "triangle")
+           shadow=TRUE, # "shadow" variable: include/exclude shadow of node
+           label=visn$nodes$id, # "label" variable: add labels on nodes
+           borderWidth=1, # "borderWidth" variable: set border width of nodes
+           color= list(border="grey", highlight=list(border='black',background='yellow')))
