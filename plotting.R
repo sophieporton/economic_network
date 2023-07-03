@@ -31,11 +31,13 @@ visn$edges$value <- visn$edges$weight
 
 
 visNetwork(visn$nodes, visn$edges,main="Economic Industry Network",width = "100%") %>%
-  visIgraphLayout(layout = "layout_in_circle") %>%
-  visEdges(arrows = 'to')  %>%
+  visIgraphLayout(layout = "layout_nicely") %>%
+  visEdges(arrows = 'to',
+           color= list(border="grey", highlight='black',
+                       smooth=TRUE))  %>%
   visOptions(nodesIdSelection=TRUE) %>%
-  visNodes(size = 20,shape="dot", # "shape" variable: customize shape of nodes ("dot", "square", "triangle")
-           shadow=TRUE, # "shadow" variable: include/exclude shadow of node
-           label=visn$nodes$id, # "label" variable: add labels on nodes
-           borderWidth=1, # "borderWidth" variable: set border width of nodes
+  visNodes(size = 25 ,shape="dot",
+           shadow=TRUE, 
+           label=visn$nodes$id,font = list(size = 40,face='bold'),
+           borderWidth=1,
            color= list(border="grey", highlight=list(border='black',background='yellow')))
