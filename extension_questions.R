@@ -38,8 +38,65 @@ diag(matrix) <- 0 #remove connections between same industry
 full_network<-graph_from_adjacency_matrix(matrix, mode='directed', weighted=TRUE,
                                           add.colnames = TRUE)
 
-ggraph(full_network) +
-  geom_edge_link(aes(start_cap = label_rect(node1.name), end_cap = label_rect(node2.name), alpha=weight), 
-                 arrow = arrow(type = "closed", length = unit(3, 'mm'))) +
-  geom_node_circle()
+plot(full_network)
 
+ggraph(full_network) +
+  geom_node_point() +
+  geom_edge_link()
+
+
+#extension questions
+
+col_sums <- colSums(matrix)
+max_sum_column <- which.max(col_sums)
+max_sum <- max(col_sums)
+print(paste("Column with Maximum Sum:", max_sum_column))
+print(paste("Maximum Sum:", max_sum))
+
+
+
+row_sums <- rowSums(matrix)
+max_sum <- max(row_sums)
+max_sum_row <- which.max(row_sums)
+print(paste("Row with Maximum Sum:", max_sum_row))
+print(paste("Maximum Sum:", max_sum))
+
+
+row_nonzero_counts <- rowSums(matrix != 0)
+max_nonzero_row <- which.max(row_nonzero_counts)
+max_nonzero_count <- sum(matrix[max_nonzero_row, ] != 0)
+print(paste("Row with Greatest Non-Zero Values:", max_nonzero_row))
+print(paste("Number of Non-Zero Values in Max Row:", max_nonzero_count))
+
+
+
+# Calculate PageRank scores
+V(full_network)$name <- colnames(matrix)
+pagerank_scores <- page_rank(full_network)$vector
+top_indices <- order(pagerank_scores, decreasing = TRUE)[1:5]
+top_node_names <- V(full_network)$name[top_indices]
+top_node_scores <- pagerank_scores[top_indices]
+for (i in 1:length(top_node_names)) {
+  print(paste("Node:", top_node_names[i]))
+  print(paste("PageRank score:", top_node_scores[i]))
+}
+
+
+# Calculate eigenvector centrality
+eigenvector_centralities <- evcent(full_network)$vector
+
+# Get the indices of the top 5 nodes with the highest eigenvector centrality
+top_indices <- order(eigenvector_centralities, decreasing = TRUE)[1:5]
+
+# Get the names of the top 5 nodes
+
+top_node_names <- V(full_network)$name[top_indices]
+
+# Get the eigenvector centrality values of the top 5 nodes
+top_node_centralities <- eigenvector_centralities[top_indices]
+
+# Display the results
+for (i in 1:length(top_node_names)) {
+  print(paste("Node:", top_node_names[i]))
+  print(paste("Eigenvector Centrality:", top_node_centralities[i]))
+}
